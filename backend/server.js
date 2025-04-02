@@ -3,7 +3,20 @@ import cors from "cors";
 
 const app = express();
 app.use(express.json());  // Fix for 400 Bad Request
-app.use(cors());  // Allow frontend requests
+
+// Configure CORS
+const corsOptions = {
+  origin: [
+    'https://career-predictor-frontend.vercel.app',  // Your frontend URL
+    'http://localhost:3000',  // Local development
+  ],
+  methods: ['POST', 'GET', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Access-Control-Allow-Origin'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 
 const validateInputs = (answers) => {
     const requiredFields = [
@@ -53,8 +66,8 @@ const predictCareer = (answers) => {
 };
 
 // Health check endpoint
-app.get("/health", (req, res) => {
-    res.json({ status: "ok" });
+app.get("/", (req, res) => {
+    res.json({ status: "ok", message: "Career Predictor API is running" });
 });
 
 app.post("/predict", (req, res) => {

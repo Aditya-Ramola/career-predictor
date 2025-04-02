@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { careerDetails } from "./careers";
 
+const BACKEND_URL = "https://career-predictor-9n26.vercel.app"; // Update this with your backend URL
+
 const questions = [
   { key: "Maths", text: "Do you like Maths?" },
   { key: "Science", text: "Are you interested in Science?" },
@@ -35,9 +37,12 @@ export default function Home() {
     setError(null);
 
     try {
-      const res = await fetch("http://localhost:5000/predict", {
+      const res = await fetch(`${BACKEND_URL}/predict`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        },
         body: JSON.stringify(form),
       });
 
