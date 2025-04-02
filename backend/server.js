@@ -7,8 +7,9 @@ app.use(express.json());  // Fix for 400 Bad Request
 // Configure CORS
 const corsOptions = {
   origin: [
-    'https://career-predictor-frontend.vercel.app',  // Your frontend URL
-    'http://localhost:3000',  // Local development
+    'https://career-predictor-frontend.vercel.app',
+    'https://career-predictor-frontend-git-main-aditya-ramolas-projects.vercel.app',
+    'http://localhost:3000'
   ],
   methods: ['POST', 'GET', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Access-Control-Allow-Origin'],
