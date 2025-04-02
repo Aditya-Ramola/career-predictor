@@ -21,10 +21,11 @@ app.use(cors(corsOptions));
 
 const validateInputs = (answers) => {
     const requiredFields = [
-        "Maths", "Science", "Creativity", "Communication", "Tech Interest",
-        "Analytical Thinking", "Leadership", "Writing Skills", "Medical Knowledge",
-        "Problem Solving", "Business Acumen", "Passion for Teaching",
-        "Interest in Law", "Musical Talent", "Empathy"
+        "Tech Interest", "Problem Solving", "Creativity", "Communication",
+        "Leadership", "Analytical Thinking", "Healthcare Interest", "Business Acumen",
+        "Design Thinking", "Research", "Teaching", "Technical Writing",
+        "Project Management", "Customer Service", "Innovation", "Detail Oriented",
+        "Risk Analysis", "Environmental Interest", "Legal Interest", "Data Analysis"
     ];
 
     const missingFields = requiredFields.filter(field => answers[field] === undefined);
@@ -40,30 +41,27 @@ const validateInputs = (answers) => {
 };
 
 const predictCareer = (answers) => {
-    const careers = {
-        "Software Developer": answers["Maths"] && answers["Tech Interest"],
-        "Doctor": answers["Science"] && answers["Medical Knowledge"],
-        "Artist": answers["Creativity"] && !answers["Maths"],
-        "Teacher": answers["Passion for Teaching"] && answers["Communication"],
-        "Data Scientist": answers["Maths"] && answers["Analytical Thinking"],
-        "Entrepreneur": answers["Leadership"] && answers["Business Acumen"],
-        "Lawyer": answers["Interest in Law"] && answers["Communication"],
-        "Psychologist": answers["Communication"] && answers["Empathy"],
-        "Game Developer": answers["Creativity"] && answers["Tech Interest"],
-        "Journalist": answers["Writing Skills"] && answers["Communication"],
-        "Financial Analyst": answers["Maths"] && answers["Problem Solving"],
-        "Marketing Manager": answers["Leadership"] && answers["Creativity"],
-        "Architect": answers["Creativity"] && answers["Maths"],
-        "Musician": answers["Musical Talent"],
-        "Chef": answers["Creativity"] && answers["Problem Solving"],
-        "Civil Engineer": answers["Maths"] && answers["Problem Solving"],
-        "Mechanical Engineer": answers["Maths"] && answers["Tech Interest"],
-        "Biotechnologist": answers["Science"] && answers["Analytical Thinking"],
-        "Scientist": answers["Science"] && answers["Analytical Thinking"],
-        "Generalist": true  // Default if no strong match
+    const scores = {
+        "Software Engineer": (answers["Tech Interest"] + answers["Problem Solving"] + answers["Technical Writing"]) / 3,
+        "Data Scientist": (answers["Data Analysis"] + answers["Analytical Thinking"] + answers["Problem Solving"]) / 3,
+        "Doctor": (answers["Healthcare Interest"] + answers["Detail Oriented"] + answers["Communication"]) / 3,
+        "Teacher": (answers["Teaching"] + answers["Communication"] + answers["Leadership"]) / 3,
+        "Lawyer": (answers["Legal Interest"] + answers["Communication"] + answers["Research"]) / 3,
+        "Business Analyst": (answers["Business Acumen"] + answers["Analytical Thinking"] + answers["Communication"]) / 3,
+        "UX Designer": (answers["Design Thinking"] + answers["Creativity"] + answers["Customer Service"]) / 3,
+        "Financial Analyst": (answers["Business Acumen"] + answers["Data Analysis"] + answers["Risk Analysis"]) / 3,
+        "Marketing Manager": (answers["Communication"] + answers["Business Acumen"] + answers["Innovation"]) / 3,
+        "Data Engineer": (answers["Tech Interest"] + answers["Data Analysis"] + answers["Detail Oriented"]) / 3,
+        "Product Manager": (answers["Project Management"] + answers["Leadership"] + answers["Communication"]) / 3,
+        "Cybersecurity Analyst": (answers["Tech Interest"] + answers["Risk Analysis"] + answers["Detail Oriented"]) / 3,
+        "DevOps Engineer": (answers["Tech Interest"] + answers["Problem Solving"] + answers["Project Management"]) / 3,
+        "Healthcare Administrator": (answers["Healthcare Interest"] + answers["Project Management"] + answers["Business Acumen"]) / 3,
+        "Environmental Scientist": (answers["Environmental Interest"] + answers["Research"] + answers["Analytical Thinking"]) / 3
     };
 
-    return Object.keys(careers).find(career => careers[career]) || "Generalist";
+    // Find the career with the highest score
+    return Object.entries(scores)
+        .reduce((a, b) => a[1] > b[1] ? a : b)[0];
 };
 
 // Health check endpoint
