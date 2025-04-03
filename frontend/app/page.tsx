@@ -60,10 +60,10 @@ const questions = [
 
 const StepIndicator = ({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => {
   return (
-    <div className="flex items-center justify-between w-full mb-8">
+    <div className="flex items-center justify-between w-full mb-6 overflow-x-auto px-2 py-1 -mx-2">
       {Array.from({ length: totalSteps }, (_, i) => (
-        <div key={i} className="flex items-center">
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+        <div key={i} className="flex items-center flex-shrink-0">
+          <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium ${
             i === currentStep
               ? 'bg-blue-600 text-white'
               : i < currentStep
@@ -73,7 +73,7 @@ const StepIndicator = ({ currentStep, totalSteps }: { currentStep: number; total
             {i + 1}
           </div>
           {i < totalSteps - 1 && (
-            <div className={`h-1 w-12 sm:w-24 mx-2 ${
+            <div className={`h-1 w-4 sm:w-12 md:w-24 mx-1 sm:mx-2 ${
               i < currentStep
                 ? 'bg-green-500'
                 : 'bg-white/20'
@@ -240,16 +240,16 @@ export default function Home() {
   }, [form, currentQuestions, currentStep, canProceed, totalSteps, careerMatches]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex flex-col items-center p-4 sm:p-8 transition-all duration-500">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex flex-col items-center p-3 sm:p-4 md:p-8 transition-all duration-500">
       {loading && <LoadingAnimation />}
       
       <div className="w-full max-w-4xl mx-auto">
-        <h1 className="text-3xl sm:text-5xl font-bold text-white mb-6 text-center animate-fade-in">
+        <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-4 sm:mb-6 text-center animate-fade-in">
           Career Predictor 🚀
         </h1>
         
         {!careerMatches && (
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4 sm:p-8 shadow-2xl mb-8 transition-all duration-500">
+          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-3 sm:p-4 md:p-8 shadow-2xl mb-6 sm:mb-8 transition-all duration-500">
             <StepIndicator currentStep={currentStep} totalSteps={totalSteps} />
             
             <div className="relative w-full h-2 bg-gray-200 rounded-full mb-6">
@@ -257,34 +257,34 @@ export default function Home() {
                 className="absolute top-0 left-0 h-full bg-blue-600 rounded-full transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
-              <div className="absolute -top-6 right-0 text-white text-sm">
+              <div className="absolute -top-6 right-0 text-white text-xs sm:text-sm">
                 {Math.round(progress)}%
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid gap-6">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+              <div className="grid gap-4 sm:gap-6">
                 {currentQuestions.map((q) => (
                   <div
                     key={q.key}
-                    className={`transform hover:scale-[1.02] transition-all duration-300 ${
+                    className={`transform hover:scale-[1.01] transition-all duration-300 ${
                       form[q.key] === undefined ? 'ring-2 ring-blue-400 rounded-xl' : ''
                     }`}
                   >
-                    <label className="block text-white text-base sm:text-lg mb-3 font-medium">
+                    <label className="block text-white text-sm sm:text-base md:text-lg mb-2 sm:mb-3 font-medium px-2 sm:px-0">
                       {q.text}
-                      <span className="ml-2 text-sm text-white/60">
+                      <span className="block sm:inline text-xs sm:text-sm text-white/60 mt-1 sm:mt-0 sm:ml-2">
                         (Press Y/N to answer)
                       </span>
                     </label>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-4">
                       <button
                         type="button"
                         onClick={() => setForm({ ...form, [q.key]: 0 })}
-                        className={`px-6 py-3 rounded-lg text-sm sm:text-base font-medium transition-all duration-300 ${
+                        className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
                           form[q.key] === 0
                             ? "bg-red-500 text-white"
-                            : "bg-white/20 text-white hover:bg-white/30"
+                            : "bg-white/20 text-white active:bg-white/30"
                         }`}
                       >
                         No
@@ -292,10 +292,10 @@ export default function Home() {
                       <button
                         type="button"
                         onClick={() => setForm({ ...form, [q.key]: 1 })}
-                        className={`px-6 py-3 rounded-lg text-sm sm:text-base font-medium transition-all duration-300 ${
+                        className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
                           form[q.key] === 1
                             ? "bg-green-500 text-white"
-                            : "bg-white/20 text-white hover:bg-white/30"
+                            : "bg-white/20 text-white active:bg-white/30"
                         }`}
                       >
                         Yes
@@ -305,12 +305,12 @@ export default function Home() {
                 ))}
               </div>
 
-              <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-8 mt-6 sm:mt-8">
+              <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-4 mt-6 sm:mt-8">
                 {currentStep > 0 && (
                   <button
                     type="button"
                     onClick={() => setCurrentStep(currentStep - 1)}
-                    className="px-4 sm:px-6 py-2 sm:py-3 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all duration-300 text-sm font-medium w-full sm:w-auto"
+                    className="px-4 sm:px-6 py-2.5 sm:py-3 bg-white/20 text-white rounded-lg active:bg-white/30 transition-all duration-300 text-sm font-medium w-full sm:w-auto"
                   >
                     ← Previous
                   </button>
@@ -320,9 +320,9 @@ export default function Home() {
                     type="button"
                     onClick={() => canProceed && setCurrentStep(currentStep + 1)}
                     disabled={!canProceed}
-                    className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 text-sm font-medium w-full sm:w-auto
+                    className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 text-sm font-medium w-full sm:w-auto
                       ${canProceed
-                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                        ? "bg-blue-600 text-white active:bg-blue-700"
                         : "bg-blue-600/50 text-white/70 cursor-not-allowed"
                       }`}
                   >
@@ -332,15 +332,15 @@ export default function Home() {
                   <button
                     type="submit"
                     disabled={loading || Object.keys(form).length !== questions.length}
-                    className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 text-sm font-medium w-full sm:w-auto
+                    className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 text-sm font-medium w-full sm:w-auto
                       ${Object.keys(form).length === questions.length && !loading
-                        ? "bg-green-600 text-white hover:bg-green-700"
+                        ? "bg-green-600 text-white active:bg-green-700"
                         : "bg-green-600/50 text-white/70 cursor-not-allowed"
                       }`}
                   >
                     {loading ? (
                       <span className="flex items-center justify-center space-x-2">
-                        <svg className="animate-spin h-4 w-4 sm:h-5 sm:w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
@@ -357,42 +357,42 @@ export default function Home() {
         )}
 
         {error && (
-          <div className="animate-fade-in bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-6">
+          <div className="animate-fade-in bg-red-100 border-l-4 border-red-500 text-red-700 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 text-sm sm:text-base">
             {error}
           </div>
         )}
 
         {careerMatches && !error && careerDetails[careerMatches[0].career] && (
-          <div className="animate-fade-in space-y-8">
+          <div className="animate-fade-in space-y-6 sm:space-y-8">
             {careerMatches.map((match, index) => (
-              <div key={match.career} className={`bg-white/10 backdrop-blur-lg rounded-xl p-4 sm:p-8 shadow-2xl transition-all duration-500 ${index === 0 ? 'ring-4 ring-blue-400' : ''}`}>
-                <div className="text-center mb-8">
+              <div key={match.career} className={`bg-white/10 backdrop-blur-lg rounded-xl p-3 sm:p-4 md:p-8 shadow-2xl transition-all duration-500 ${index === 0 ? 'ring-4 ring-blue-400' : ''}`}>
+                <div className="text-center mb-6 sm:mb-8">
                   <div className="flex items-center justify-center gap-2 mb-2">
-                    {index === 0 && <span className="text-yellow-400 text-2xl">👑</span>}
-                    <h2 className="text-2xl sm:text-3xl font-bold text-white">
+                    {index === 0 && <span className="text-yellow-400 text-xl sm:text-2xl">👑</span>}
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
                       {index === 0 ? "Best Match" : `Alternative ${index}`}
                     </h2>
                   </div>
-                  <h3 className="text-3xl sm:text-4xl font-bold text-blue-300">{match.career}</h3>
-                  <div className="mt-4 flex justify-center items-center gap-2">
-                    <div className="text-white text-lg">Match Score:</div>
-                    <div className="text-2xl font-bold text-green-400">{match.confidence}%</div>
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-300">{match.career}</h3>
+                  <div className="mt-3 sm:mt-4 flex justify-center items-center gap-2">
+                    <div className="text-white text-base sm:text-lg">Match Score:</div>
+                    <div className="text-xl sm:text-2xl font-bold text-green-400">{match.confidence}%</div>
                   </div>
                 </div>
 
-                <div className="grid gap-6 text-white">
+                <div className="grid gap-4 sm:gap-6 text-white">
                   <div className="space-y-2">
-                    <h4 className="text-xl font-semibold text-blue-200">Description</h4>
-                    <p className="text-base sm:text-lg">{careerDetails[match.career].description}</p>
+                    <h4 className="text-lg sm:text-xl font-semibold text-blue-200">Description</h4>
+                    <p className="text-sm sm:text-base md:text-lg">{careerDetails[match.career].description}</p>
                   </div>
 
                   <div className="space-y-2">
-                    <h4 className="text-xl font-semibold text-blue-200">Required Skills</h4>
+                    <h4 className="text-lg sm:text-xl font-semibold text-blue-200">Required Skills</h4>
                     <div className="flex flex-wrap gap-2">
                       {careerDetails[match.career].skills.map((skill) => (
                         <span
                           key={skill}
-                          className="px-3 py-1 bg-white/20 rounded-full text-sm"
+                          className="px-2 sm:px-3 py-1 bg-white/20 rounded-full text-xs sm:text-sm"
                         >
                           {skill}
                         </span>
@@ -401,17 +401,17 @@ export default function Home() {
                   </div>
 
                   <div className="space-y-2">
-                    <h4 className="text-xl font-semibold text-blue-200">Education Path</h4>
+                    <h4 className="text-lg sm:text-xl font-semibold text-blue-200">Education Path</h4>
                     <ul className="list-disc list-inside space-y-1">
                       {careerDetails[match.career].education.map((edu) => (
-                        <li key={edu} className="text-base sm:text-lg">{edu}</li>
+                        <li key={edu} className="text-sm sm:text-base md:text-lg">{edu}</li>
                       ))}
                     </ul>
                   </div>
 
                   <div className="space-y-2">
-                    <h4 className="text-xl font-semibold text-blue-200">Average Salary Range</h4>
-                    <p className="text-2xl font-bold text-green-400">
+                    <h4 className="text-lg sm:text-xl font-semibold text-blue-200">Average Salary Range</h4>
+                    <p className="text-xl sm:text-2xl font-bold text-green-400">
                       {careerDetails[match.career].averageSalary}
                     </p>
                   </div>
@@ -419,7 +419,7 @@ export default function Home() {
               </div>
             ))}
 
-            <div className="flex justify-center gap-4 mt-8">
+            <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mt-6 sm:mt-8">
               <button
                 onClick={() => {
                   setCareerMatches(null);
@@ -427,7 +427,7 @@ export default function Home() {
                   setCurrentStep(0);
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
-                className="px-6 py-3 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all duration-300 text-lg font-medium"
+                className="px-4 sm:px-6 py-2.5 sm:py-3 bg-white/20 text-white rounded-lg active:bg-white/30 transition-all duration-300 text-sm sm:text-lg font-medium"
               >
                 Start Over
               </button>
@@ -437,7 +437,7 @@ export default function Home() {
           </div>
         )}
 
-        <footer className="mt-10 text-white/80 text-center text-sm sm:text-base">
+        <footer className="mt-8 sm:mt-10 text-white/80 text-center text-xs sm:text-sm md:text-base">
           Made with ❤️ by <span className="font-bold">Aditya Ramola</span>
         </footer>
       </div>
