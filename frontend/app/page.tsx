@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { careerDetails } from "./careers";
 
-const BACKEND_URL = "http://localhost:5000"; // Local development server URL
+const BACKEND_URL = "https://career-predictor-six.vercel.app"; // Deployed backend URL
 
 const questions = [
   { key: "Maths", text: "Do you enjoy solving mathematical problems?" },
