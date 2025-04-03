@@ -60,23 +60,23 @@ const questions = [
 
 const StepIndicator = ({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => {
   return (
-    <div className="flex items-center justify-between w-full mb-6 overflow-x-auto px-2 py-1 -mx-2">
+    <div className="flex items-center justify-between w-full mb-6 overflow-x-auto px-2 py-1 -mx-2 scrollbar-hide">
       {Array.from({ length: totalSteps }, (_, i) => (
         <div key={i} className="flex items-center flex-shrink-0">
-          <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium ${
+          <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium ${
             i === currentStep
-              ? 'bg-blue-600 text-white'
+              ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
               : i < currentStep
-              ? 'bg-green-500 text-white'
-              : 'bg-white/20 text-white'
+              ? 'bg-indigo-500/50 text-white'
+              : 'bg-gray-800 text-gray-400'
           }`}>
             {i + 1}
           </div>
           {i < totalSteps - 1 && (
-            <div className={`h-1 w-4 sm:w-12 md:w-24 mx-1 sm:mx-2 ${
+            <div className={`h-0.5 w-4 sm:w-12 md:w-24 mx-1 sm:mx-2 ${
               i < currentStep
-                ? 'bg-green-500'
-                : 'bg-white/20'
+                ? 'bg-indigo-500/50'
+                : 'bg-gray-800'
             }`} />
           )}
         </div>
@@ -85,16 +85,63 @@ const StepIndicator = ({ currentStep, totalSteps }: { currentStep: number; total
   );
 };
 
-const LoadingAnimation = () => (
-  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-    <div className="bg-white/10 backdrop-blur-lg rounded-xl p-8 max-w-md w-full mx-4 text-center">
-      <div className="flex flex-col items-center space-y-4">
-        <div className="relative w-20 h-20">
-          <div className="absolute inset-0 border-4 border-blue-200 rounded-full animate-pulse"></div>
-          <div className="absolute inset-0 border-4 border-blue-500 rounded-full animate-spin" style={{ borderTopColor: 'transparent' }}></div>
+const InitialLoadingScreen = () => {
+  const [showContent, setShowContent] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowContent(true);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (showContent) return null;
+
+  return (
+    <div className="fixed inset-0 bg-gray-900 z-50 flex flex-col items-center justify-center">
+      <div className="relative w-full max-w-lg mx-auto p-4">
+        <div className="text-center space-y-6">
+          <div className="relative">
+            <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-75 blur animate-pulse"></div>
+            <h1 className="relative bg-gray-900 rounded-lg px-8 py-4">
+              <span className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 text-transparent bg-clip-text animate-gradient">
+                Career Predictor
+              </span>
+            </h1>
+          </div>
+          
+          <div className="flex justify-center">
+            <div className="relative w-16 h-16">
+              <div className="absolute inset-0 rounded-full border-t-4 border-indigo-500 animate-spin"></div>
+              <div className="absolute inset-2 rounded-full border-t-4 border-purple-500 animate-spin-slow"></div>
+              <div className="absolute inset-4 rounded-full border-t-4 border-pink-500 animate-spin-slower"></div>
+            </div>
+          </div>
+
+          <div className="mt-8 relative">
+            <div className="text-gray-400 text-sm sm:text-base animate-pulse">
+              Made with <span className="text-red-400">❤️</span> by
+            </div>
+            <div className="text-lg sm:text-xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 animate-gradient">
+              Aditya Ramola
+            </div>
+          </div>
         </div>
-        <div className="text-white text-xl font-medium">Analyzing Your Responses</div>
-        <div className="text-white/80 text-sm">Finding the best career matches for you...</div>
+      </div>
+    </div>
+  );
+};
+
+const LoadingAnimation = () => (
+  <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="bg-gray-900/90 backdrop-blur-lg rounded-2xl p-8 max-w-md w-full mx-4 text-center border border-gray-800">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 border-4 border-indigo-300/20 rounded-full animate-pulse"></div>
+          <div className="absolute inset-0 border-4 border-indigo-500 rounded-full animate-spin" style={{ borderTopColor: 'transparent' }}></div>
+        </div>
+        <div className="text-white text-lg font-medium">Analyzing Responses</div>
+        <div className="text-gray-400 text-sm">Finding your ideal career path...</div>
       </div>
     </div>
   </div>
@@ -151,6 +198,411 @@ const ShareButton = ({ careerMatches }: { careerMatches: { career: string; confi
   );
 };
 
+const useSound = () => {
+  const playClick = () => {
+    if (typeof window !== 'undefined') {
+      const audio = new Audio('/click.mp3');
+      audio.volume = 0.2;
+      audio.play().catch(() => {});
+    }
+  };
+
+  const playSuccess = () => {
+    if (typeof window !== 'undefined') {
+      const audio = new Audio('/success.mp3');
+      audio.volume = 0.2;
+      audio.play().catch(() => {});
+    }
+  };
+
+  return { playClick, playSuccess };
+};
+
+const KeyboardShortcuts = () => (
+  <div className="fixed bottom-4 right-4 bg-gray-800/90 backdrop-blur-sm rounded-lg p-3 text-xs text-gray-400 border border-gray-700/50 hidden sm:block">
+    <div className="space-y-1">
+      <div className="flex items-center gap-2">
+        <kbd className="px-2 py-1 bg-gray-700 rounded text-gray-300">Y</kbd>
+        <span>for Yes</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <kbd className="px-2 py-1 bg-gray-700 rounded text-gray-300">N</kbd>
+        <span>for No</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <kbd className="px-2 py-1 bg-gray-700 rounded text-gray-300">←</kbd>
+        <span>Previous</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <kbd className="px-2 py-1 bg-gray-700 rounded text-gray-300">→</kbd>
+        <span>Next</span>
+      </div>
+    </div>
+  </div>
+);
+
+const ResultCard = ({ match, index, isExpanded, onToggle }: { 
+  match: { career: string; confidence: number }; 
+  index: number;
+  isExpanded: boolean;
+  onToggle: () => void;
+}) => {
+  const career = careerDetails[match.career];
+  const [showSkillDetails, setShowSkillDetails] = useState(false);
+
+  return (
+    <div className={`bg-gray-800/50 backdrop-blur-lg rounded-2xl shadow-2xl transition-all duration-500 border ${
+      index === 0 ? 'border-indigo-500/50 shadow-lg shadow-indigo-500/10' : 'border-gray-700/50'
+    }`}>
+      <div className="p-4 sm:p-6 md:p-8">
+        <div className="text-center mb-6">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            {index === 0 && (
+              <div className="relative">
+                <span className="text-yellow-400 text-xl sm:text-2xl animate-bounce-slow">👑</span>
+                <div className="absolute -inset-2 rounded-full bg-yellow-400/20 animate-pulse"></div>
+              </div>
+            )}
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-indigo-400">
+              {index === 0 ? "Best Match" : `Alternative ${index}`}
+            </h2>
+          </div>
+          
+          <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">{match.career}</h3>
+          
+          <div className="relative inline-flex items-center px-4 py-2 rounded-full bg-indigo-500/20 border border-indigo-500/30">
+            <div 
+              className="absolute left-0 top-0 bottom-0 rounded-full bg-indigo-600/20" 
+              style={{ width: `${match.confidence}%` }}
+            />
+            <span className="relative text-gray-300 text-sm sm:text-base mr-2">Match Score:</span>
+            <span className="relative text-lg sm:text-xl font-bold text-indigo-400">{match.confidence}%</span>
+          </div>
+        </div>
+
+        <div className="grid gap-6 sm:gap-8">
+          <div className="space-y-2">
+            <h4 className="text-lg sm:text-xl font-semibold text-indigo-400 flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Description
+            </h4>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300">{career.description}</p>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-lg sm:text-xl font-semibold text-indigo-400 flex items-center gap-2">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                </svg>
+                Required Skills
+              </h4>
+              <button 
+                onClick={() => setShowSkillDetails(!showSkillDetails)}
+                className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
+              >
+                {showSkillDetails ? 'Hide Details' : 'Show Details'}
+              </button>
+            </div>
+            <div className="grid gap-2">
+              {career.skills.map((skill, idx) => (
+                <div 
+                  key={skill}
+                  className={`relative overflow-hidden rounded-lg transition-all duration-300 ${
+                    showSkillDetails ? 'bg-gray-700/50' : ''
+                  }`}
+                >
+                  <div className="flex items-center gap-2 p-2">
+                    <div className={`w-2 h-2 rounded-full ${
+                      idx < 3 ? 'bg-green-400' : idx < 6 ? 'bg-yellow-400' : 'bg-gray-400'
+                    }`} />
+                    <span className="text-sm sm:text-base text-gray-300">{skill}</span>
+                    {showSkillDetails && (
+                      <div className="ml-auto text-xs text-gray-400">
+                        {idx < 3 ? 'Core Skill' : idx < 6 ? 'Important' : 'Beneficial'}
+                      </div>
+                    )}
+                  </div>
+                  {showSkillDetails && (
+                    <div className="h-1 bg-gray-600/50">
+                      <div 
+                        className={`h-full ${
+                          idx < 3 ? 'bg-green-400' : idx < 6 ? 'bg-yellow-400' : 'bg-gray-400'
+                        }`}
+                        style={{ width: `${100 - (idx * 10)}%` }}
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <h4 className="text-lg sm:text-xl font-semibold text-indigo-400 flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              Education Path
+            </h4>
+            <div className="space-y-2">
+              {career.education.map((edu, idx) => (
+                <div 
+                  key={edu}
+                  className="flex items-start gap-3 p-2 rounded-lg bg-gray-700/30 border border-gray-600/30"
+                >
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-xs text-indigo-400">
+                    {idx + 1}
+                  </div>
+                  <span className="text-sm sm:text-base text-gray-300">{edu}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <h4 className="text-lg sm:text-xl font-semibold text-indigo-400 flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Salary Range
+            </h4>
+            <div className="inline-flex items-center px-4 py-2 rounded-lg bg-green-500/20 border border-green-500/30">
+              <span className="text-xl sm:text-2xl font-bold text-green-400">
+                {career.averageSalary}
+              </span>
+            </div>
+          </div>
+
+          {isExpanded && (
+            <>
+              <div className="space-y-3">
+                <h4 className="text-lg sm:text-xl font-semibold text-indigo-400 flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                  Career Growth
+                </h4>
+                <div className="grid gap-2">
+                  <div className="p-3 rounded-lg bg-gray-700/30 border border-gray-600/30">
+                    <div className="text-sm font-medium text-indigo-400 mb-1">Entry Level</div>
+                    <div className="text-sm text-gray-300">Start with junior positions, focusing on fundamental skills and gaining practical experience.</div>
+                  </div>
+                  <div className="p-3 rounded-lg bg-gray-700/30 border border-gray-600/30">
+                    <div className="text-sm font-medium text-indigo-400 mb-1">Mid Career</div>
+                    <div className="text-sm text-gray-300">Progress to senior roles with increased responsibilities and specialized expertise.</div>
+                  </div>
+                  <div className="p-3 rounded-lg bg-gray-700/30 border border-gray-600/30">
+                    <div className="text-sm font-medium text-indigo-400 mb-1">Advanced</div>
+                    <div className="text-sm text-gray-300">Lead teams, manage projects, or become a subject matter expert in your field.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="text-lg sm:text-xl font-semibold text-indigo-400 flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Key Success Factors
+                </h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    "Continuous Learning",
+                    "Problem Solving",
+                    "Communication",
+                    "Adaptability",
+                    "Time Management",
+                    "Team Collaboration"
+                  ].map((factor) => (
+                    <div 
+                      key={factor}
+                      className="p-2 rounded-lg bg-gray-700/30 border border-gray-600/30 text-sm text-gray-300 flex items-center gap-2"
+                    >
+                      <svg className="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      {factor}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+      
+      <button
+        onClick={onToggle}
+        className="w-full p-3 border-t border-gray-700/50 text-sm text-gray-400 hover:text-gray-300 transition-colors flex items-center justify-center gap-1"
+      >
+        {isExpanded ? (
+          <>
+            Show Less
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+            </svg>
+          </>
+        ) : (
+          <>
+            Show More
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </>
+        )}
+      </button>
+    </div>
+  );
+};
+
+const FunResultPage = ({ type, onStartOver }: { 
+  type: 'all-no' | 'all-yes';
+  onStartOver: () => void;
+}) => {
+  const [showConfetti, setShowConfetti] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowConfetti(false), 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (type === 'all-no') {
+    return (
+      <div className="animate-fade-in text-center space-y-8">
+        <div className="relative">
+          <div className="absolute inset-0 bg-red-500/20 blur-3xl animate-pulse"></div>
+          <div className="relative bg-gray-800/80 backdrop-blur-lg rounded-2xl p-6 sm:p-8 md:p-10 border border-red-500/30">
+            <div className="text-6xl mb-6 animate-bounce">🤦‍♂️</div>
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-red-400 to-orange-400 text-transparent bg-clip-text px-4 py-2">
+              आपका तो कुछ नहीं हो सकता!
+            </h2>
+            <p className="text-gray-400 text-base sm:text-lg md:text-xl mb-6">
+              (Aapka toh kuch nahi ho sakta!)
+            </p>
+            <div className="space-y-4 text-left max-w-lg mx-auto mb-8">
+              <div className="bg-gray-700/50 p-4 rounded-lg border border-red-500/20">
+                <div className="flex items-center gap-2 text-red-400 mb-2">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <span className="font-medium">Career Crisis Alert!</span>
+                </div>
+                <p className="text-gray-300">Looks like you've mastered the art of saying "No" to everything! 😅</p>
+              </div>
+              <div className="bg-gray-700/50 p-4 rounded-lg border border-orange-500/20">
+                <div className="flex items-center gap-2 text-orange-400 mb-2">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                  <span className="font-medium">Pro Tip:</span>
+                </div>
+                <p className="text-gray-300">Maybe try saying "Yes" to something... Anything... Just once? 🙏</p>
+              </div>
+              <div className="bg-gray-700/50 p-4 rounded-lg border border-yellow-500/20">
+                <div className="flex items-center gap-2 text-yellow-400 mb-2">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  <span className="font-medium">Fun Fact:</span>
+                </div>
+                <p className="text-gray-300">Even a potato eventually grows something! 🥔✨</p>
+              </div>
+            </div>
+            <button
+              onClick={onStartOver}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-lg hover:from-red-600 hover:to-orange-600 active:scale-95 transition-all duration-300 text-sm sm:text-base font-medium shadow-lg shadow-red-500/25"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Start Over
+            </button>
+          </div>
+        </div>
+        <div className="relative animate-float">
+          <img 
+            src="/meme-no.gif" 
+            alt="Funny meme"
+            className="rounded-lg shadow-2xl mx-auto max-w-sm"
+            onError={(e) => e.currentTarget.style.display = 'none'}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="animate-fade-in text-center space-y-8">
+      {showConfetti && (
+        <div className="fixed inset-0 pointer-events-none z-50">
+          {/* Add confetti effect here */}
+        </div>
+      )}
+      <div className="relative">
+        <div className="absolute inset-0 bg-indigo-500/20 blur-3xl animate-pulse"></div>
+        <div className="relative bg-gray-800/80 backdrop-blur-lg rounded-2xl p-6 sm:p-8 md:p-10 border border-indigo-500/30">
+          <div className="text-6xl mb-6 animate-bounce">👑</div>
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 text-transparent bg-clip-text px-4 py-2">
+            आप तो बहुत महान हो!
+          </h2>
+          <p className="text-gray-400 text-base sm:text-lg md:text-xl mb-6">
+            (Aap toh bahut mahan ho!)
+          </p>
+          <div className="space-y-4 text-left max-w-lg mx-auto mb-8">
+            <div className="bg-gray-700/50 p-4 rounded-lg border border-indigo-500/20">
+              <div className="flex items-center gap-2 text-indigo-400 mb-2">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span className="font-medium">Achievement Unlocked!</span>
+              </div>
+              <p className="text-gray-300">You've achieved the impossible - saying "Yes" to everything! You're either extremely talented or... extremely optimistic! 🌟</p>
+            </div>
+            <div className="bg-gray-700/50 p-4 rounded-lg border border-purple-500/20">
+              <div className="flex items-center gap-2 text-purple-400 mb-2">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span className="font-medium">Career Forecast:</span>
+              </div>
+              <p className="text-gray-300">With your incredible range of skills, you could be anything from a rocket scientist to a unicorn trainer! 🚀🦄</p>
+            </div>
+            <div className="bg-gray-700/50 p-4 rounded-lg border border-pink-500/20">
+              <div className="flex items-center gap-2 text-pink-400 mb-2">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="font-medium">Reality Check:</span>
+              </div>
+              <p className="text-gray-300">Even superheroes need to focus on something specific! Maybe try being a bit more selective? 😉</p>
+            </div>
+          </div>
+          <button
+            onClick={onStartOver}
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-lg hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 active:scale-95 transition-all duration-300 text-sm sm:text-base font-medium shadow-lg shadow-indigo-500/25"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Start Over
+          </button>
+        </div>
+      </div>
+      <div className="relative animate-float">
+        <img 
+          src="/meme-yes.gif" 
+          alt="Celebration meme"
+          className="rounded-lg shadow-2xl mx-auto max-w-sm"
+          onError={(e) => e.currentTarget.style.display = 'none'}
+        />
+      </div>
+    </div>
+  );
+};
+
 export default function Home() {
   const [form, setForm] = useState<{ [key: string]: number }>({});
   const [careerMatches, setCareerMatches] = useState<{ career: string; confidence: number }[] | null>(null);
@@ -158,11 +610,34 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const questionsPerStep = 10;
+  const { playClick, playSuccess } = useSound();
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [expandedCards, setExpandedCards] = useState<number[]>([0]); // First card expanded by default
+
+  const handleAnswer = (key: string, value: number) => {
+    playClick();
+    setForm(prev => ({ ...prev, [key]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    playSuccess();
+
+    // Check for all No's or all Yes's
+    const answers = Object.values(form);
+    const allNo = answers.length === questions.length && answers.every(a => a === 0);
+    const allYes = answers.length === questions.length && answers.every(a => a === 1);
+
+    if (allNo || allYes) {
+      setCareerMatches([{ 
+        career: allNo ? 'Nothing' : 'Everything',
+        confidence: allNo ? 0 : 100 
+      }]);
+      setLoading(false);
+      return;
+    }
 
     try {
       console.log("Submitting form data:", form);
@@ -186,6 +661,8 @@ export default function Home() {
       }
       
       setCareerMatches(data.matches);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 5000);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err: unknown) {
       const error = err as Error;
@@ -239,25 +716,52 @@ export default function Home() {
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [form, currentQuestions, currentStep, canProceed, totalSteps, careerMatches]);
 
+  const toggleCardExpansion = (index: number) => {
+    setExpandedCards(prev => 
+      prev.includes(index) 
+        ? prev.filter(i => i !== index)
+        : [...prev, index]
+    );
+  };
+
+  const handleStartOver = () => {
+    setCareerMatches(null);
+    setForm({});
+    setCurrentStep(0);
+    setExpandedCards([0]);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex flex-col items-center p-3 sm:p-4 md:p-8 transition-all duration-500">
+    <div className="min-h-screen bg-gray-900 flex flex-col items-center p-3 sm:p-4 md:p-8 transition-all duration-500">
+      <InitialLoadingScreen />
       {loading && <LoadingAnimation />}
+      <KeyboardShortcuts />
+      
+      {showConfetti && (
+        <div className="fixed inset-0 pointer-events-none z-50">
+          {/* Add confetti effect here if you want to use a confetti library */}
+        </div>
+      )}
       
       <div className="w-full max-w-4xl mx-auto">
-        <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-4 sm:mb-6 text-center animate-fade-in">
-          Career Predictor 🚀
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 sm:mb-6 text-center animate-fade-in">
+          <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 text-transparent bg-clip-text">
+            Career Predictor
+          </span>
+          <span className="text-indigo-400"> AI</span> 🚀
         </h1>
         
         {!careerMatches && (
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-3 sm:p-4 md:p-8 shadow-2xl mb-6 sm:mb-8 transition-all duration-500">
+          <div className="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-3 sm:p-4 md:p-8 shadow-2xl mb-6 sm:mb-8 transition-all duration-500 border border-gray-700/50">
             <StepIndicator currentStep={currentStep} totalSteps={totalSteps} />
             
-            <div className="relative w-full h-2 bg-gray-200 rounded-full mb-6">
+            <div className="relative w-full h-1.5 bg-gray-800 rounded-full mb-6">
               <div
-                className="absolute top-0 left-0 h-full bg-blue-600 rounded-full transition-all duration-500"
+                className="absolute top-0 left-0 h-full bg-indigo-600 rounded-full transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
-              <div className="absolute -top-6 right-0 text-white text-xs sm:text-sm">
+              <div className="absolute -top-6 right-0 text-gray-400 text-xs sm:text-sm">
                 {Math.round(progress)}%
               </div>
             </div>
@@ -267,38 +771,61 @@ export default function Home() {
                 {currentQuestions.map((q) => (
                   <div
                     key={q.key}
-                    className={`transform hover:scale-[1.01] transition-all duration-300 ${
-                      form[q.key] === undefined ? 'ring-2 ring-blue-400 rounded-xl' : ''
+                    className={`transform transition-all duration-300 rounded-xl bg-gray-800/50 p-4 sm:p-5 border ${
+                      form[q.key] === undefined ? 'border-indigo-500/50 shadow-lg shadow-indigo-500/10' : 'border-gray-700/50'
                     }`}
                   >
-                    <label className="block text-white text-sm sm:text-base md:text-lg mb-2 sm:mb-3 font-medium px-2 sm:px-0">
+                    <label className="block text-gray-200 text-sm sm:text-base md:text-lg mb-3 sm:mb-4 font-medium">
                       {q.text}
-                      <span className="block sm:inline text-xs sm:text-sm text-white/60 mt-1 sm:mt-0 sm:ml-2">
-                        (Press Y/N to answer)
-                      </span>
                     </label>
-                    <div className="grid grid-cols-2 gap-2 sm:gap-4">
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
                       <button
                         type="button"
-                        onClick={() => setForm({ ...form, [q.key]: 0 })}
-                        className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
+                        onClick={() => handleAnswer(q.key, 0)}
+                        className={`group relative px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-all duration-300 overflow-hidden ${
                           form[q.key] === 0
-                            ? "bg-red-500 text-white"
-                            : "bg-white/20 text-white active:bg-white/30"
+                            ? "bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-lg shadow-red-500/30"
+                            : "bg-gray-700/50 text-gray-300 border border-gray-600/50 hover:bg-gray-700 active:scale-95"
                         }`}
                       >
-                        No
+                        <span className="relative z-10 flex items-center justify-center gap-2">
+                          {form[q.key] === 0 && (
+                            <svg className="w-4 h-4 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          )}
+                          No
+                        </span>
+                        {form[q.key] === 0 && (
+                          <>
+                            <div className="absolute inset-0 bg-gradient-to-r from-rose-500/20 to-red-600/20 animate-gradient"></div>
+                            <div className="absolute inset-0 opacity-25 bg-gradient-to-r from-rose-500 to-red-600 animate-pulse"></div>
+                          </>
+                        )}
                       </button>
                       <button
                         type="button"
-                        onClick={() => setForm({ ...form, [q.key]: 1 })}
-                        className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
+                        onClick={() => handleAnswer(q.key, 1)}
+                        className={`group relative px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-all duration-300 overflow-hidden ${
                           form[q.key] === 1
-                            ? "bg-green-500 text-white"
-                            : "bg-white/20 text-white active:bg-white/30"
+                            ? "bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg shadow-green-500/30"
+                            : "bg-gray-700/50 text-gray-300 border border-gray-600/50 hover:bg-gray-700 active:scale-95"
                         }`}
                       >
-                        Yes
+                        <span className="relative z-10 flex items-center justify-center gap-2">
+                          {form[q.key] === 1 && (
+                            <svg className="w-4 h-4 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                          Yes
+                        </span>
+                        {form[q.key] === 1 && (
+                          <>
+                            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-green-600/20 animate-gradient"></div>
+                            <div className="absolute inset-0 opacity-25 bg-gradient-to-r from-emerald-500 to-green-600 animate-pulse"></div>
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
@@ -310,7 +837,7 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={() => setCurrentStep(currentStep - 1)}
-                    className="px-4 sm:px-6 py-2.5 sm:py-3 bg-white/20 text-white rounded-lg active:bg-white/30 transition-all duration-300 text-sm font-medium w-full sm:w-auto"
+                    className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 active:scale-95 transition-all duration-300 text-sm font-medium w-full sm:w-auto border border-gray-700"
                   >
                     ← Previous
                   </button>
@@ -322,8 +849,8 @@ export default function Home() {
                     disabled={!canProceed}
                     className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 text-sm font-medium w-full sm:w-auto
                       ${canProceed
-                        ? "bg-blue-600 text-white active:bg-blue-700"
-                        : "bg-blue-600/50 text-white/70 cursor-not-allowed"
+                        ? "bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95"
+                        : "bg-gray-800 text-gray-500 cursor-not-allowed"
                       }`}
                   >
                     Next →
@@ -334,8 +861,8 @@ export default function Home() {
                     disabled={loading || Object.keys(form).length !== questions.length}
                     className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 text-sm font-medium w-full sm:w-auto
                       ${Object.keys(form).length === questions.length && !loading
-                        ? "bg-green-600 text-white active:bg-green-700"
-                        : "bg-green-600/50 text-white/70 cursor-not-allowed"
+                        ? "bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95"
+                        : "bg-gray-800 text-gray-500 cursor-not-allowed"
                       }`}
                   >
                     {loading ? (
@@ -357,90 +884,98 @@ export default function Home() {
         )}
 
         {error && (
-          <div className="animate-fade-in bg-red-100 border-l-4 border-red-500 text-red-700 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 text-sm sm:text-base">
+          <div className="animate-fade-in bg-red-500/10 border border-red-500/30 text-red-400 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 text-sm sm:text-base">
             {error}
           </div>
         )}
 
-        {careerMatches && !error && careerDetails[careerMatches[0].career] && (
-          <div className="animate-fade-in space-y-6 sm:space-y-8">
-            {careerMatches.map((match, index) => (
-              <div key={match.career} className={`bg-white/10 backdrop-blur-lg rounded-xl p-3 sm:p-4 md:p-8 shadow-2xl transition-all duration-500 ${index === 0 ? 'ring-4 ring-blue-400' : ''}`}>
-                <div className="text-center mb-6 sm:mb-8">
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    {index === 0 && <span className="text-yellow-400 text-xl sm:text-2xl">👑</span>}
-                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
-                      {index === 0 ? "Best Match" : `Alternative ${index}`}
-                    </h2>
-                  </div>
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-300">{match.career}</h3>
-                  <div className="mt-3 sm:mt-4 flex justify-center items-center gap-2">
-                    <div className="text-white text-base sm:text-lg">Match Score:</div>
-                    <div className="text-xl sm:text-2xl font-bold text-green-400">{match.confidence}%</div>
-                  </div>
-                </div>
+        {careerMatches && !error && (
+          careerMatches[0].career === 'Nothing' ? (
+            <FunResultPage type="all-no" onStartOver={handleStartOver} />
+          ) : careerMatches[0].career === 'Everything' ? (
+            <FunResultPage type="all-yes" onStartOver={handleStartOver} />
+          ) : (
+            <div className="animate-fade-in space-y-6 sm:space-y-8">
+              {careerMatches.map((match, index) => (
+                <ResultCard
+                  key={match.career}
+                  match={match}
+                  index={index}
+                  isExpanded={expandedCards.includes(index)}
+                  onToggle={() => toggleCardExpansion(index)}
+                />
+              ))}
 
-                <div className="grid gap-4 sm:gap-6 text-white">
-                  <div className="space-y-2">
-                    <h4 className="text-lg sm:text-xl font-semibold text-blue-200">Description</h4>
-                    <p className="text-sm sm:text-base md:text-lg">{careerDetails[match.career].description}</p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <h4 className="text-lg sm:text-xl font-semibold text-blue-200">Required Skills</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {careerDetails[match.career].skills.map((skill) => (
-                        <span
-                          key={skill}
-                          className="px-2 sm:px-3 py-1 bg-white/20 rounded-full text-xs sm:text-sm"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <h4 className="text-lg sm:text-xl font-semibold text-blue-200">Education Path</h4>
-                    <ul className="list-disc list-inside space-y-1">
-                      {careerDetails[match.career].education.map((edu) => (
-                        <li key={edu} className="text-sm sm:text-base md:text-lg">{edu}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="space-y-2">
-                    <h4 className="text-lg sm:text-xl font-semibold text-blue-200">Average Salary Range</h4>
-                    <p className="text-xl sm:text-2xl font-bold text-green-400">
-                      {careerDetails[match.career].averageSalary}
-                    </p>
-                  </div>
-                </div>
+              <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mt-6 sm:mt-8">
+                <button
+                  onClick={handleStartOver}
+                  className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 active:scale-95 transition-all duration-300 text-sm sm:text-base font-medium border border-gray-700"
+                >
+                  Start Over
+                </button>
+                
+                <ShareButton careerMatches={careerMatches} />
               </div>
-            ))}
-
-            <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mt-6 sm:mt-8">
-              <button
-                onClick={() => {
-                  setCareerMatches(null);
-                  setForm({});
-                  setCurrentStep(0);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-                className="px-4 sm:px-6 py-2.5 sm:py-3 bg-white/20 text-white rounded-lg active:bg-white/30 transition-all duration-300 text-sm sm:text-lg font-medium"
-              >
-                Start Over
-              </button>
-              
-              <ShareButton careerMatches={careerMatches} />
             </div>
-          </div>
+          )
         )}
 
-        <footer className="mt-8 sm:mt-10 text-white/80 text-center text-xs sm:text-sm md:text-base">
-          Made with ❤️ by <span className="font-bold">Aditya Ramola</span>
+        <footer className="mt-8 sm:mt-10 text-gray-500 text-center text-xs sm:text-sm">
+          Made with <span className="text-red-400">❤️</span> by <span className="font-medium text-gray-400">Aditya Ramola</span>
         </footer>
       </div>
+
+      <style jsx global>{`
+        @keyframes gradient {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        
+        .animate-gradient {
+          background-size: 200% 200%;
+          animation: gradient 8s ease infinite;
+        }
+        
+        .animate-spin-slow {
+          animation: spin 3s linear infinite;
+        }
+        
+        .animate-spin-slower {
+          animation: spin 4s linear infinite;
+        }
+        
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        .animate-bounce {
+          animation: bounce 0.5s ease-in-out;
+        }
+
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-25%); }
+        }
+
+        .animate-bounce-slow {
+          animation: bounce 2s infinite;
+        }
+
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-20px); }
+        }
+      `}</style>
     </div>
   );
 }
