@@ -9,142 +9,128 @@ interface CareerDetail {
 export const careerDetails: { [key: string]: CareerDetail } = {
   "Software Developer": {
     title: "Software Developer",
-    description: "Design, develop, and maintain software applications and systems. Work with various programming languages and frameworks to create efficient solutions.",
-    skills: ["Programming", "Problem Solving", "System Design", "Debugging", "Team Collaboration"],
+    description: "Create innovative software solutions using various programming languages and technologies. Design, develop, and maintain applications while collaborating with cross-functional teams to deliver high-quality software products.",
+    skills: ["Programming", "Problem Solving", "System Design", "Debugging", "Team Collaboration", "Continuous Learning"],
     averageSalary: "$70,000 - $150,000",
     education: ["Bachelor's in Computer Science", "Software Engineering", "Related Technical Field"]
   },
+  "Data Scientist": {
+    title: "Data Scientist",
+    description: "Apply advanced analytics, machine learning, and statistical methods to extract insights from complex data sets. Help organizations make data-driven decisions and develop predictive models.",
+    skills: ["Statistics", "Machine Learning", "Programming", "Data Analysis", "Problem Solving", "Communication"],
+    averageSalary: "$80,000 - $160,000",
+    education: ["Master's in Data Science", "Statistics", "Computer Science", "Mathematics"]
+  },
   "Doctor": {
     title: "Doctor",
-    description: "Diagnose and treat patients' illnesses and injuries. Provide medical care and advice to maintain patient health.",
-    skills: ["Medical Knowledge", "Patient Care", "Diagnosis", "Communication", "Decision Making"],
+    description: "Provide medical care and treatment to patients while staying current with medical advances. Diagnose conditions, prescribe medications, and work with healthcare teams to ensure optimal patient outcomes.",
+    skills: ["Medical Knowledge", "Patient Care", "Diagnosis", "Communication", "Decision Making", "Empathy"],
     averageSalary: "$150,000 - $300,000",
-    education: ["Medical Degree (MD)", "Residency", "Specialization"]
-  },
-  "Artist": {
-    title: "Artist",
-    description: "Create visual art using various mediums. Express creativity through paintings, sculptures, digital art, or other forms.",
-    skills: ["Creativity", "Visual Design", "Color Theory", "Artistic Techniques", "Portfolio Management"],
-    averageSalary: "$40,000 - $80,000",
-    education: ["Bachelor's in Fine Arts", "Art School", "Self-Taught Practice"]
+    education: ["Medical Degree (MD)", "Residency", "Specialization", "Board Certification"]
   },
   "Teacher": {
     title: "Teacher",
-    description: "Educate students and help them develop knowledge and skills. Create lesson plans and assess student progress.",
-    skills: ["Teaching", "Communication", "Patience", "Organization", "Leadership"],
+    description: "Shape young minds and inspire learning through engaging instruction methods. Create inclusive learning environments, develop curriculum materials, and adapt teaching strategies to meet diverse student needs.",
+    skills: ["Teaching", "Communication", "Patience", "Organization", "Leadership", "Adaptability"],
     averageSalary: "$45,000 - $85,000",
     education: ["Bachelor's in Education", "Teaching Certification", "Subject Expertise"]
   },
-  "Data Scientist": {
-    title: "Data Scientist",
-    description: "Analyze complex data sets to help organizations make informed decisions. Use statistical methods and machine learning.",
-    skills: ["Statistics", "Programming", "Machine Learning", "Data Analysis", "Problem Solving"],
-    averageSalary: "$80,000 - $160,000",
-    education: ["Master's in Data Science", "Statistics", "Computer Science"]
-  },
-  "Entrepreneur": {
-    title: "Entrepreneur",
-    description: "Start and run businesses. Identify opportunities, develop business plans, and manage operations.",
-    skills: ["Leadership", "Business Strategy", "Risk Management", "Networking", "Financial Planning"],
-    averageSalary: "Variable",
-    education: ["Business Degree (Optional)", "Industry Experience", "Self-Learning"]
-  },
   "Lawyer": {
     title: "Lawyer",
-    description: "Provide legal advice and representation to clients. Interpret laws and regulations, prepare legal documents.",
-    skills: ["Legal Analysis", "Research", "Negotiation", "Communication", "Critical Thinking"],
+    description: "Advocate for clients' rights and provide legal counsel across various areas of law. Research cases, prepare legal documents, and represent clients in court proceedings while staying current with legal developments.",
+    skills: ["Legal Analysis", "Research", "Negotiation", "Communication", "Critical Thinking", "Attention to Detail"],
     averageSalary: "$70,000 - $200,000",
-    education: ["Law Degree (JD)", "Bar Admission", "Continuing Education"]
+    education: ["Law Degree (JD)", "Bar Admission", "Continuing Legal Education"]
+  },
+  "Artist": {
+    title: "Artist",
+    description: "Create compelling visual art across various mediums while developing a unique artistic style. Work on commissioned projects, exhibitions, and collaborate with clients to bring creative visions to life.",
+    skills: ["Creativity", "Visual Design", "Color Theory", "Artistic Techniques", "Portfolio Management", "Marketing"],
+    averageSalary: "$40,000 - $80,000",
+    education: ["Bachelor's in Fine Arts", "Art School", "Specialized Training"]
   },
   "Psychologist": {
     title: "Psychologist",
-    description: "Study human behavior and mental processes. Help people cope with mental health issues and life challenges.",
-    skills: ["Empathy", "Analysis", "Communication", "Research", "Patient Care"],
+    description: "Help individuals overcome mental health challenges and improve their well-being. Conduct assessments, provide therapy, and develop treatment plans while staying updated with psychological research.",
+    skills: ["Empathy", "Analysis", "Communication", "Research", "Patient Care", "Ethical Judgment"],
     averageSalary: "$60,000 - $130,000",
-    education: ["Doctorate in Psychology", "Clinical License", "Specialization"]
+    education: ["Doctorate in Psychology", "Clinical License", "Specialized Training"]
+  },
+  "Financial Analyst": {
+    title: "Financial Analyst",
+    description: "Evaluate financial data and market trends to guide investment decisions. Prepare financial models, analyze company performance, and provide recommendations for investment strategies.",
+    skills: ["Financial Analysis", "Mathematics", "Research", "Communication", "Problem Solving", "Risk Assessment"],
+    averageSalary: "$60,000 - $120,000",
+    education: ["Finance Degree", "CFA Certification", "MBA (optional)"]
+  },
+  "Marketing Manager": {
+    title: "Marketing Manager",
+    description: "Develop and execute marketing strategies to promote products or services. Analyze market trends, manage campaigns, and coordinate with various stakeholders to achieve business objectives.",
+    skills: ["Marketing Strategy", "Communication", "Analytics", "Creativity", "Leadership", "Digital Marketing"],
+    averageSalary: "$60,000 - $140,000",
+    education: ["Marketing Degree", "MBA (optional)", "Digital Marketing Certifications"]
   },
   "Game Developer": {
     title: "Game Developer",
-    description: "Create video games for various platforms. Design game mechanics, write code, and implement features.",
-    skills: ["Programming", "Game Design", "Creativity", "Problem Solving", "Team Collaboration"],
+    description: "Create engaging video games by combining technical skills with creative storytelling. Design game mechanics, implement features, and optimize performance while collaborating with artists and designers.",
+    skills: ["Programming", "Game Design", "Creativity", "Problem Solving", "3D Modeling", "Team Collaboration"],
     averageSalary: "$60,000 - $120,000",
     education: ["Computer Science Degree", "Game Development", "Software Engineering"]
   },
   "Journalist": {
     title: "Journalist",
-    description: "Research and report news stories. Write articles, conduct interviews, and verify information.",
-    skills: ["Writing", "Research", "Communication", "Time Management", "Ethics"],
+    description: "Investigate and report news stories across various media platforms. Conduct interviews, verify sources, and craft compelling narratives while maintaining journalistic integrity.",
+    skills: ["Writing", "Research", "Communication", "Time Management", "Ethics", "Digital Media"],
     averageSalary: "$40,000 - $90,000",
-    education: ["Journalism Degree", "Communications", "Writing Experience"]
-  },
-  "Financial Analyst": {
-    title: "Financial Analyst",
-    description: "Analyze financial data and market trends. Provide investment advice and financial planning.",
-    skills: ["Financial Analysis", "Mathematics", "Research", "Communication", "Problem Solving"],
-    averageSalary: "$60,000 - $120,000",
-    education: ["Finance Degree", "Business Administration", "CFA Certification"]
-  },
-  "Marketing Manager": {
-    title: "Marketing Manager",
-    description: "Develop and implement marketing strategies. Manage campaigns and analyze market trends.",
-    skills: ["Marketing Strategy", "Communication", "Analytics", "Creativity", "Leadership"],
-    averageSalary: "$60,000 - $140,000",
-    education: ["Marketing Degree", "Business Administration", "Digital Marketing"]
+    education: ["Journalism Degree", "Communications", "Digital Media"]
   },
   "Architect": {
     title: "Architect",
-    description: "Design buildings and structures. Create detailed plans and oversee construction projects.",
-    skills: ["Design", "Technical Drawing", "Project Management", "Creativity", "Problem Solving"],
+    description: "Design innovative and sustainable buildings while considering aesthetics, functionality, and safety. Collaborate with clients, engineers, and contractors to bring architectural visions to life.",
+    skills: ["Design", "Technical Drawing", "Project Management", "Creativity", "3D Modeling", "Sustainability"],
     averageSalary: "$70,000 - $150,000",
-    education: ["Architecture Degree", "Professional License", "Internship"]
+    education: ["Architecture Degree", "Professional License", "Sustainable Design"]
   },
-  "Musician": {
-    title: "Musician",
-    description: "Create and perform music. May work in bands, orchestras, or as a solo artist.",
-    skills: ["Musical Talent", "Performance", "Creativity", "Practice Discipline", "Collaboration"],
-    averageSalary: "Variable",
-    education: ["Music Degree", "Performance Training", "Self-Practice"]
+  "Environmental Scientist": {
+    title: "Environmental Scientist",
+    description: "Study environmental problems and develop solutions to protect the planet. Conduct research, analyze data, and provide recommendations for environmental conservation and sustainability.",
+    skills: ["Research", "Data Analysis", "Environmental Knowledge", "Problem Solving", "Communication", "Field Work"],
+    averageSalary: "$55,000 - $110,000",
+    education: ["Environmental Science Degree", "Research Experience", "Field Certification"]
   },
-  "Chef": {
-    title: "Chef",
-    description: "Create and prepare meals in restaurants or other settings. Manage kitchen operations and staff.",
-    skills: ["Cooking", "Menu Planning", "Leadership", "Time Management", "Creativity"],
-    averageSalary: "$45,000 - $100,000",
-    education: ["Culinary School", "Apprenticeship", "Industry Experience"]
+  "Project Manager": {
+    title: "Project Manager",
+    description: "Lead teams to successfully complete projects on time and within budget. Coordinate resources, manage stakeholders, and ensure project objectives are met while maintaining quality standards.",
+    skills: ["Leadership", "Organization", "Communication", "Risk Management", "Budgeting", "Problem Solving"],
+    averageSalary: "$65,000 - $140,000",
+    education: ["Business Degree", "PMP Certification", "Industry Experience"]
   },
-  "Civil Engineer": {
-    title: "Civil Engineer",
-    description: "Design and oversee construction projects. Work on infrastructure like roads, buildings, and bridges.",
-    skills: ["Engineering", "Mathematics", "Project Management", "Problem Solving", "Technical Drawing"],
+  "UX Designer": {
+    title: "UX Designer",
+    description: "Create user-centered digital experiences that are both functional and engaging. Conduct user research, design interfaces, and collaborate with developers to implement effective user experiences.",
+    skills: ["User Research", "Interface Design", "Prototyping", "Usability Testing", "Communication", "Problem Solving"],
     averageSalary: "$65,000 - $130,000",
-    education: ["Civil Engineering Degree", "Professional License", "Internship"]
+    education: ["Design Degree", "UX Certification", "Portfolio Development"]
   },
-  "Mechanical Engineer": {
-    title: "Mechanical Engineer",
-    description: "Design and build mechanical systems. Work on machines, engines, and other mechanical devices.",
-    skills: ["Engineering", "CAD Design", "Problem Solving", "Mathematics", "Technical Skills"],
-    averageSalary: "$70,000 - $140,000",
-    education: ["Mechanical Engineering Degree", "Professional License", "Technical Training"]
+  "Business Consultant": {
+    title: "Business Consultant",
+    description: "Help organizations improve their performance through expert analysis and strategic recommendations. Identify problems, develop solutions, and guide implementation of business improvements.",
+    skills: ["Business Analysis", "Strategy", "Problem Solving", "Communication", "Project Management", "Industry Knowledge"],
+    averageSalary: "$70,000 - $150,000",
+    education: ["Business Degree", "MBA", "Industry Certifications"]
   },
-  "Biotechnologist": {
-    title: "Biotechnologist",
-    description: "Apply biological processes to develop new products. Work in fields like medicine, agriculture, or environmental science.",
-    skills: ["Biology", "Lab Techniques", "Research", "Analysis", "Problem Solving"],
-    averageSalary: "$55,000 - $120,000",
-    education: ["Biotechnology Degree", "Research Experience", "Advanced Degree"]
+  "Human Resources Manager": {
+    title: "Human Resources Manager",
+    description: "Oversee organizational workforce strategy and employee relations. Manage recruitment, training, benefits, and ensure compliance with employment laws while fostering a positive work culture.",
+    skills: ["HR Management", "Communication", "Conflict Resolution", "Organization", "Employment Law", "Leadership"],
+    averageSalary: "$65,000 - $130,000",
+    education: ["HR Management Degree", "SHRM Certification", "Labor Law Knowledge"]
   },
-  "Scientist": {
-    title: "Scientist",
-    description: "Conduct research and experiments in various fields. Analyze data and publish findings.",
-    skills: ["Research", "Analysis", "Scientific Method", "Writing", "Critical Thinking"],
+  "Research Scientist": {
+    title: "Research Scientist",
+    description: "Conduct advanced research to expand scientific knowledge and develop new technologies. Design experiments, analyze results, and publish findings while collaborating with other researchers.",
+    skills: ["Research Methods", "Data Analysis", "Scientific Writing", "Critical Thinking", "Lab Techniques", "Grant Writing"],
     averageSalary: "$60,000 - $130,000",
-    education: ["Science Degree", "PhD", "Research Experience"]
-  },
-  "Generalist": {
-    title: "Generalist",
-    description: "Versatile professional with broad skills. Can adapt to various roles and industries.",
-    skills: ["Adaptability", "Communication", "Problem Solving", "Learning Ability", "Versatility"],
-    averageSalary: "Variable",
-    education: ["Various Fields", "Continuous Learning", "Diverse Experience"]
+    education: ["PhD in Sciences", "Research Experience", "Publications"]
   }
 }; 

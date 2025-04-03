@@ -1,35 +1,163 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { careerDetails } from "./careers";
 
-const BACKEND_URL = "https://career-predictor-9n26.vercel.app"; // Update this with your backend URL
+const BACKEND_URL = "http://localhost:5000"; // Local development server URL
 
 const questions = [
-  { key: "Maths", text: "Do you like Maths?" },
-  { key: "Science", text: "Are you interested in Science?" },
-  { key: "Creativity", text: "Are you creative?" },
-  { key: "Communication", text: "Do you have good communication skills?" },
-  { key: "Tech Interest", text: "Are you interested in technology?" },
-  { key: "Analytical Thinking", text: "Do you like solving analytical problems?" },
-  { key: "Leadership", text: "Do you have leadership qualities?" },
-  { key: "Writing Skills", text: "Are you good at writing?" },
-  { key: "Medical Knowledge", text: "Do you have interest in medical field?" },
-  { key: "Problem Solving", text: "Are you good at problem solving?" },
-  { key: "Business Acumen", text: "Are you interested in business?" },
-  { key: "Passion for Teaching", text: "Do you like teaching others?" },
-  { key: "Interest in Law", text: "Do you like legal studies?" },
-  { key: "Musical Talent", text: "Do you play any musical instrument?" },
-  { key: "Empathy", text: "Do you understand and care about others' feelings?" },
+  { key: "Maths", text: "Do you enjoy solving mathematical problems?" },
+  { key: "Science", text: "Are you fascinated by scientific discoveries and experiments?" },
+  { key: "Creativity", text: "Do you enjoy expressing yourself through creative activities?" },
+  { key: "Communication", text: "Are you comfortable speaking in front of groups?" },
+  { key: "Tech Interest", text: "Do you keep up with the latest technology trends?" },
+  { key: "Analytical Thinking", text: "Do you enjoy breaking down complex problems?" },
+  { key: "Leadership", text: "Do you naturally take charge in group situations?" },
+  { key: "Writing Skills", text: "Do you enjoy writing and expressing ideas through text?" },
+  { key: "Medical Knowledge", text: "Are you interested in human anatomy and health?" },
+  { key: "Problem Solving", text: "Do you like finding innovative solutions to challenges?" },
+  { key: "Business Acumen", text: "Are you interested in business strategies and markets?" },
+  { key: "Passion for Teaching", text: "Do you enjoy explaining concepts to others?" },
+  { key: "Interest in Law", text: "Are you interested in legal systems and justice?" },
+  { key: "Musical Talent", text: "Do you have a good sense of rhythm and melody?" },
+  { key: "Empathy", text: "Can you easily understand others' emotions?" },
+  { key: "Visual Arts", text: "Do you enjoy drawing, painting, or digital design?" },
+  { key: "Physical Activity", text: "Do you prefer active, hands-on work?" },
+  { key: "Research", text: "Do you enjoy gathering and analyzing information?" },
+  { key: "Nature Interest", text: "Are you passionate about environment and nature?" },
+  { key: "Technical Skills", text: "Are you good at working with tools and machines?" },
+  { key: "Social Service", text: "Do you feel motivated to help others?" },
+  { key: "Organization", text: "Are you good at planning and organizing?" },
+  { key: "Innovation", text: "Do you often think of new ideas or approaches?" },
+  { key: "Detail Oriented", text: "Do you pay close attention to details?" },
+  { key: "Public Speaking", text: "Are you comfortable addressing large audiences?" },
+  { key: "Data Analysis", text: "Do you enjoy working with data and statistics?" },
+  { key: "Project Management", text: "Can you effectively coordinate multiple tasks?" },
+  { key: "Customer Service", text: "Do you enjoy helping and serving customers?" },
+  { key: "Design Thinking", text: "Do you have an eye for aesthetics and design?" },
+  { key: "Financial Interest", text: "Are you interested in finance and investments?" },
+  { key: "Language Skills", text: "Are you good at learning new languages?" },
+  { key: "Team Collaboration", text: "Do you work well in team environments?" },
+  { key: "Critical Thinking", text: "Do you question assumptions and analyze arguments?" },
+  { key: "Entrepreneurial", text: "Are you interested in starting your own business?" },
+  { key: "Digital Skills", text: "Are you proficient with digital tools and software?" },
+  { key: "Mechanical Aptitude", text: "Do you understand how machines and systems work?" },
+  { key: "Sales Ability", text: "Are you good at persuading others?" },
+  { key: "Scientific Method", text: "Do you enjoy conducting experiments?" },
+  { key: "Artistic Expression", text: "Do you have a strong creative vision?" },
+  { key: "Risk Taking", text: "Are you comfortable taking calculated risks?" },
+  { key: "Adaptability", text: "Can you easily adapt to new situations?" },
+  { key: "Strategic Thinking", text: "Do you excel at long-term planning?" },
+  { key: "Cultural Awareness", text: "Are you interested in different cultures?" },
+  { key: "Problem Diagnosis", text: "Are you good at identifying root causes?" },
+  { key: "Resource Management", text: "Can you efficiently manage resources?" },
+  { key: "Emotional Intelligence", text: "Can you manage your emotions effectively?" },
+  { key: "Spatial Awareness", text: "Are you good at visualizing in 3D?" },
+  { key: "Time Management", text: "Are you good at managing your time?" },
+  { key: "Conflict Resolution", text: "Are you good at resolving disagreements?" },
+  { key: "Learning Agility", text: "Do you learn new skills quickly?" }
 ];
+
+const StepIndicator = ({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => {
+  return (
+    <div className="flex items-center justify-between w-full mb-8">
+      {Array.from({ length: totalSteps }, (_, i) => (
+        <div key={i} className="flex items-center">
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+            i === currentStep
+              ? 'bg-blue-600 text-white'
+              : i < currentStep
+              ? 'bg-green-500 text-white'
+              : 'bg-white/20 text-white'
+          }`}>
+            {i + 1}
+          </div>
+          {i < totalSteps - 1 && (
+            <div className={`h-1 w-12 sm:w-24 mx-2 ${
+              i < currentStep
+                ? 'bg-green-500'
+                : 'bg-white/20'
+            }`} />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const LoadingAnimation = () => (
+  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="bg-white/10 backdrop-blur-lg rounded-xl p-8 max-w-md w-full mx-4 text-center">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="relative w-20 h-20">
+          <div className="absolute inset-0 border-4 border-blue-200 rounded-full animate-pulse"></div>
+          <div className="absolute inset-0 border-4 border-blue-500 rounded-full animate-spin" style={{ borderTopColor: 'transparent' }}></div>
+        </div>
+        <div className="text-white text-xl font-medium">Analyzing Your Responses</div>
+        <div className="text-white/80 text-sm">Finding the best career matches for you...</div>
+      </div>
+    </div>
+  </div>
+);
+
+const ShareButton = ({ careerMatches }: { careerMatches: { career: string; confidence: number }[] }) => {
+  const [copied, setCopied] = useState(false);
+
+  const shareText = `🎯 My Career Predictor Results:\n\n${careerMatches.map((match, i) => 
+    `${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'} ${match.career} (${match.confidence}% match)`
+  ).join('\n')}\n\nTry it yourself!`;
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My Career Prediction Results',
+          text: shareText,
+          url: window.location.href
+        });
+      } catch (err) {
+        console.error('Error sharing:', err);
+        copyToClipboard();
+      }
+    } else {
+      copyToClipboard();
+    }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(shareText).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <button
+      onClick={handleShare}
+      className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 text-lg font-medium"
+    >
+      {copied ? (
+        <>
+          <span>✓</span>
+          <span>Copied!</span>
+        </>
+      ) : (
+        <>
+          <span>📤</span>
+          <span>Share Results</span>
+        </>
+      )}
+    </button>
+  );
+};
 
 export default function Home() {
   const [form, setForm] = useState<{ [key: string]: number }>({});
-  const [career, setCareer] = useState<string | null>(null);
+  const [careerMatches, setCareerMatches] = useState<{ career: string; confidence: number }[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
-  const questionsPerStep = 5;
+  const questionsPerStep = 10;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,23 +165,36 @@ export default function Home() {
     setError(null);
 
     try {
+      console.log("Submitting form data:", form);
+      console.log("Number of answers:", Object.keys(form).length);
+      
       const res = await fetch(`${BACKEND_URL}/predict`, {
         method: "POST",
         headers: { 
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
+          "Content-Type": "application/json"
         },
+        mode: "cors",
         body: JSON.stringify(form),
       });
 
-      if (!res.ok) throw new Error("Failed to get prediction. Please try again.");
+      console.log("Response status:", res.status);
       const data = await res.json();
-      setCareer(data.career);
+      console.log("Response data:", data);
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to get prediction. Please try again.");
+      }
+      
+      setCareerMatches(data.matches);
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } catch (error) {
-      console.error("Error:", error);
-      setError(error instanceof Error ? error.message : "An unexpected error occurred");
-      setCareer(null);
+    } catch (err: unknown) {
+      const error = err as Error;
+      console.error("Detailed error:", error);
+      console.error("Error type:", error.constructor.name);
+      console.error("Error message:", error.message);
+      console.error("Stack trace:", error.stack);
+      setError(error.message || "An unexpected error occurred");
+      setCareerMatches(null);
     } finally {
       setLoading(false);
     }
@@ -67,15 +208,50 @@ export default function Home() {
   const progress = (Object.keys(form).length / questions.length) * 100;
   const canProceed = currentQuestions.every((q) => form[q.key] !== undefined);
 
+  const totalSteps = Math.ceil(questions.length / questionsPerStep);
+
+  // Add keyboard navigation
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (!careerMatches) {
+        const currentQuestion = currentQuestions[
+          currentQuestions.findIndex(q => form[q.key] === undefined)
+        ];
+        
+        if (currentQuestion) {
+          if (e.key === "n" || e.key === "N") {
+            setForm({ ...form, [currentQuestion.key]: 0 });
+          } else if (e.key === "y" || e.key === "Y") {
+            setForm({ ...form, [currentQuestion.key]: 1 });
+          }
+        }
+        
+        // Navigate between steps
+        if (e.key === "ArrowLeft" && currentStep > 0) {
+          setCurrentStep(currentStep - 1);
+        } else if (e.key === "ArrowRight" && canProceed && currentStep < totalSteps - 1) {
+          setCurrentStep(currentStep + 1);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [form, currentQuestions, currentStep, canProceed, totalSteps, careerMatches]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex flex-col items-center p-4 sm:p-8 transition-all duration-500">
+      {loading && <LoadingAnimation />}
+      
       <div className="w-full max-w-4xl mx-auto">
         <h1 className="text-3xl sm:text-5xl font-bold text-white mb-6 text-center animate-fade-in">
           Career Predictor 🚀
         </h1>
         
-        {!career && (
+        {!careerMatches && (
           <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4 sm:p-8 shadow-2xl mb-8 transition-all duration-500">
+            <StepIndicator currentStep={currentStep} totalSteps={totalSteps} />
+            
             <div className="relative w-full h-2 bg-gray-200 rounded-full mb-6">
               <div
                 className="absolute top-0 left-0 h-full bg-blue-600 rounded-full transition-all duration-500"
@@ -91,10 +267,15 @@ export default function Home() {
                 {currentQuestions.map((q) => (
                   <div
                     key={q.key}
-                    className="transform hover:scale-[1.02] transition-all duration-300"
+                    className={`transform hover:scale-[1.02] transition-all duration-300 ${
+                      form[q.key] === undefined ? 'ring-2 ring-blue-400 rounded-xl' : ''
+                    }`}
                   >
                     <label className="block text-white text-base sm:text-lg mb-3 font-medium">
                       {q.text}
+                      <span className="ml-2 text-sm text-white/60">
+                        (Press Y/N to answer)
+                      </span>
                     </label>
                     <div className="grid grid-cols-2 gap-4">
                       <button
@@ -181,57 +362,78 @@ export default function Home() {
           </div>
         )}
 
-        {career && !error && careerDetails[career] && (
-          <div className="animate-fade-in bg-white/10 backdrop-blur-lg rounded-xl p-4 sm:p-8 shadow-2xl space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">Your Ideal Career</h2>
-              <h3 className="text-3xl sm:text-4xl font-bold text-blue-300">{career}</h3>
-            </div>
+        {careerMatches && !error && careerDetails[careerMatches[0].career] && (
+          <div className="animate-fade-in space-y-8">
+            {careerMatches.map((match, index) => (
+              <div key={match.career} className={`bg-white/10 backdrop-blur-lg rounded-xl p-4 sm:p-8 shadow-2xl transition-all duration-500 ${index === 0 ? 'ring-4 ring-blue-400' : ''}`}>
+                <div className="text-center mb-8">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    {index === 0 && <span className="text-yellow-400 text-2xl">👑</span>}
+                    <h2 className="text-2xl sm:text-3xl font-bold text-white">
+                      {index === 0 ? "Best Match" : `Alternative ${index}`}
+                    </h2>
+                  </div>
+                  <h3 className="text-3xl sm:text-4xl font-bold text-blue-300">{match.career}</h3>
+                  <div className="mt-4 flex justify-center items-center gap-2">
+                    <div className="text-white text-lg">Match Score:</div>
+                    <div className="text-2xl font-bold text-green-400">{match.confidence}%</div>
+                  </div>
+                </div>
 
-            <div className="grid gap-6 text-white">
-              <div className="space-y-2">
-                <h4 className="text-xl font-semibold text-blue-200">Description</h4>
-                <p className="text-base sm:text-lg">{careerDetails[career].description}</p>
-              </div>
+                <div className="grid gap-6 text-white">
+                  <div className="space-y-2">
+                    <h4 className="text-xl font-semibold text-blue-200">Description</h4>
+                    <p className="text-base sm:text-lg">{careerDetails[match.career].description}</p>
+                  </div>
 
-              <div className="space-y-2">
-                <h4 className="text-xl font-semibold text-blue-200">Required Skills</h4>
-                <div className="flex flex-wrap gap-2">
-                  {careerDetails[career].skills.map((skill) => (
-                    <span key={skill} className="px-3 py-1 bg-blue-600/30 rounded-full text-sm">
-                      {skill}
-                    </span>
-                  ))}
+                  <div className="space-y-2">
+                    <h4 className="text-xl font-semibold text-blue-200">Required Skills</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {careerDetails[match.career].skills.map((skill) => (
+                        <span
+                          key={skill}
+                          className="px-3 py-1 bg-white/20 rounded-full text-sm"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h4 className="text-xl font-semibold text-blue-200">Education Path</h4>
+                    <ul className="list-disc list-inside space-y-1">
+                      {careerDetails[match.career].education.map((edu) => (
+                        <li key={edu} className="text-base sm:text-lg">{edu}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h4 className="text-xl font-semibold text-blue-200">Average Salary Range</h4>
+                    <p className="text-2xl font-bold text-green-400">
+                      {careerDetails[match.career].averageSalary}
+                    </p>
+                  </div>
                 </div>
               </div>
+            ))}
 
-              <div className="space-y-2">
-                <h4 className="text-xl font-semibold text-blue-200">Education Path</h4>
-                <ul className="list-disc list-inside space-y-1 text-sm sm:text-base">
-                  {careerDetails[career].education.map((edu) => (
-                    <li key={edu}>{edu}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="space-y-2">
-                <h4 className="text-xl font-semibold text-blue-200">Average Salary Range</h4>
-                <p className="text-xl sm:text-2xl font-semibold text-green-300">
-                  {careerDetails[career].averageSalary}
-                </p>
-              </div>
+            <div className="flex justify-center gap-4 mt-8">
+              <button
+                onClick={() => {
+                  setCareerMatches(null);
+                  setForm({});
+                  setCurrentStep(0);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                className="px-6 py-3 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all duration-300 text-lg font-medium"
+              >
+                Start Over
+              </button>
+              
+              <ShareButton careerMatches={careerMatches} />
             </div>
-
-            <button
-              onClick={() => {
-                setCareer(null);
-                setForm({});
-                setCurrentStep(0);
-              }}
-              className="w-full px-6 py-3 mt-8 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all duration-300 text-sm sm:text-base font-medium"
-            >
-              Start Over
-            </button>
           </div>
         )}
 
