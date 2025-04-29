@@ -1,6 +1,7 @@
 import random
 import sys
 import json
+import pandas as pd
 
 # Generate a large dataset with 6000+ rows
 random.seed(42)
@@ -36,6 +37,8 @@ def generate_data():
     return data
 
 data = generate_data()
+df = pd.DataFrame(data)
+df.to_csv("data.csv", index=False)
 
 def predict_career(inputs):
     if inputs["Maths"] and inputs["Science"]:
